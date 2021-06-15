@@ -1,0 +1,146 @@
+﻿<adonisControls:AdonisWindow x:Class="LogAnalyzerWPF.Windows.InspectionResults"
+                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                             xmlns:local="clr-namespace:LogAnalyzerWPF.Windows"
+                             xmlns:localControls="clr-namespace:LogAnalyzerWPF.Controls"
+                             xmlns:localConverters="clr-namespace:LogAnalyzerWPF"
+                             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+                             xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+                             xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
+                             mc:Ignorable="d"
+                             Title="Inspection results" ShowInTaskbar="False" Width="900" Height="600" MinWidth="300" MinHeight="300" WindowStartupLocation="CenterOwner" IconVisibility="Collapsed">
+    <adonisControls:AdonisWindow.CommandBindings>
+        <CommandBinding Command="{x:Static local:InspectionResults.CommandLineAction}" Executed="onLineAction"/>
+    </adonisControls:AdonisWindow.CommandBindings>
+    <adonisControls:AdonisWindow.Resources>
+        <DataTemplate x:Key="ListBoxItem">
+            <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}" HorizontalAlignment="Stretch">
+                <DockPanel Margin="5" LastChildFill="True">
+                    <Button DockPanel.Dock="Left" Margin="0,0,5,0" VerticalAlignment="Center" Visibility="{Binding HasLineIndex, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"
+                                        Command="{x:Static local:InspectionResults.CommandLineAction}"
+                                        CommandParameter="{Binding Mode=OneWay}">
+                        <ContentControl>
+                            <Path VerticalAlignment="Center" Stretch="Uniform" Data="{StaticResource ResourceKey=IconGoto}" Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                        </ContentControl>
+                    </Button>
+                    <Button DockPanel.Dock="Left" Margin="0,0,5,0" VerticalAlignment="Center" Visibility="{Binding HasLineRange, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"
+                                        Command="{x:Static local:InspectionResults.CommandLineAction}"
+                                        CommandParameter="{Binding Mode=OneWay}">
+                        <ContentControl>
+                            <Path VerticalAlignment="Center" Stretch="Uniform" Data="{StaticResource ResourceKey=IconRepoExport}" Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                        </ContentControl>
+                    </Button>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <Label Margin="5,0,0,0" FontWeight="Bold" Content="{Binding Context, Mode=OneTime}" />
+                        <localControls:SelectableTextBlock Margin="5,3,0,0" MaxHeight="48" TextTrimming="WordEllipsis" TextWrapping="Wrap" Text="{Binding Message, Mode=OneTime}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </DataTemplate>
+    </adonisControls:AdonisWindow.Resources>
+    <Grid Margin="10">
+        <TabControl x:Name="mTabControl" adonisExtensions:LayerExtension.Layer="0">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="tab_group"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Name="SelectionBorder" BorderThickness="0,0,0,2" BorderBrush="Transparent" >
+                                        <ContentPresenter x:Name="ContentSite" Margin="10" TextBlock.FontWeight="Bold" TextBlock.FontStretch="Expanded" TextBlock.FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Stretch" ContentSource="Header" RecognizesAccessKey="True" />
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Panel.ZIndex" Value="100" />
+                                        <Setter TargetName="SelectionBorder" Property="BorderBrush" Value="{DynamicResource {x:Static adonisUi:Brushes.AccentBrush}}" />
+                                        <Setter TargetName="ContentSite" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static adonisUi:Brushes.AccentBrush}}" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="ContentSite" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+            <TabControl.Template>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <DockPanel LastChildFill="True">
+                        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}">
+                            <StackPanel x:Name="HeaderPanel" IsItemsHost="True" Orientation="Horizontal" />
+                        </Border>
+                        <ContentPresenter Margin="10" x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
+                    </DockPanel>
+                </ControlTemplate>
+            </TabControl.Template>
+
+            <TabItem Header="Tags" Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}">
+                <DockPanel LastChildFill="True">
+                    <Border DockPanel.Dock="Left" VerticalAlignment="Stretch" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}">
+                        <StackPanel>
+                            <Button Margin="0,5,15,5" HorizontalAlignment="Center" Click="mButtonTagsRepo_Click" >
+                                <ContentControl>
+                                    <Path VerticalAlignment="Center" Stretch="Uniform" Data="{StaticResource ResourceKey=IconRepoExport}" Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                                </ContentControl>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <TreeView x:Name="mTagsTree" Margin="5,5,0,5">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemStyle}">
+                                <Setter Property="IsExpanded" Value="True" />
+                                <Setter Property="IsSelected" Value="{Binding IsInitiallySelected, Mode=OneTime}" />
+                                <Setter Property="KeyboardNavigation.AcceptsReturn" Value="True" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneTime}">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                                    <ContentPresenter Content="{Binding Name, Mode=OneTime}" Margin="2,0" />
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+            </TabItem>
+            
+            <TabItem Header="Info" Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}">
+                <ListBox ItemsSource="{Binding Infos}" ItemTemplate="{StaticResource ListBoxItem}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </TabItem>
+            
+            <TabItem Header="Warnings" Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}">
+                <ListBox ItemsSource="{Binding Warns}" ItemTemplate="{StaticResource ListBoxItem}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </TabItem>
+            
+            <TabItem x:Name="mTabExecutions" Header="Executions" Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}">
+                <ListBox ItemsSource="{Binding Execs}" ItemTemplate="{StaticResource ListBoxItem}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</adonisControls:AdonisWindow>

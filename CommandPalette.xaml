@@ -1,0 +1,66 @@
+﻿<adonisControls:AdonisWindow x:Class="LogAnalyzerWPF.CommandPalette"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogAnalyzerWPF"
+        xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+        xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+        xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
+        mc:Ignorable="d"
+        Title="Commands palette" Height="Auto" MinWidth="300" MinHeight="200" MaxHeight="400" Width="500"
+        ShowInTaskbar="False" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
+    <Window.Resources>
+        <DataTemplate x:Key="DataTemplateCommand">
+            <DockPanel Margin="4,2,2,2" LastChildFill="True">
+                <Path DockPanel.Dock="Left" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" Data="{StaticResource IconFilter}" Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                <TextBlock DockPanel.Dock="Top" Margin="9,0,0,0" Text="{Binding Name}" />
+                <TextBlock Margin="9,0,0,0" Text="{Binding Desc}" FontStyle="Italic" Visibility="{Binding ShowDesc, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" />
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DataTemplateSeparator">
+            <TextBlock Margin="4,4,2,4" Text="{Binding Name}" FontWeight="Bold" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Padding="5" BorderThickness="1" BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}">
+            <DockPanel LastChildFill="True">
+                <Path DockPanel.Dock="Left" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="{adonisUi:Space 1, 0, 0, 0}" Data="{StaticResource IconTextSearch}" Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                <TextBox Name="mTextInput" AcceptsReturn="False" AcceptsTab="False" HorizontalAlignment="Stretch" BorderThickness="0" adonisExtensions:WatermarkExtension.Watermark="filter commands..." Margin="{adonisUi:Space 1, 0, 0, 0}" />
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="1" Padding="5" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}" Visibility="{Binding ShowCommands, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+            <ListBox Name="mListCommands" ItemsSource="{Binding Cmds}" Height="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Focusable" Value="True" />
+                        <Setter Property="ContentTemplate" Value="{StaticResource DataTemplateCommand}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:CommandPalette+Command+CommandType.Separator}">
+                                <Setter Property="Focusable" Value="False" />
+                                <Setter Property="ContentTemplate" Value="{StaticResource DataTemplateSeparator}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Border>
+
+        <Border Grid.Row="1" Padding="5" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}" Visibility="{Binding ShowWait, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+            <DockPanel LastChildFill="True">
+                <ProgressBar Width="130" Height="10" IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </DockPanel>
+        </Border>
+    </Grid>
+</adonisControls:AdonisWindow>
