@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="LogAnalyzerWPF.Controls.ContentLines"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LogAnalyzerWPF"
+             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="StyleListBoxItem" TargetType="ListBoxItem">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Trace}">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Debug}">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Info}">
+                    <Setter Property="Foreground" Value="#E7B248"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Warn}">
+                    <Setter Property="Foreground" Value="#FD8A22"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Error}">
+                    <Setter Property="Foreground" Value="#E32639"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Fatal}">
+                    <Setter Property="Foreground" Value="#F92472"/>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Background" Value="{Binding Path=ThreadBrush}"/>
+        </Style>
+        <Style x:Key="StylePathItem" TargetType="Path">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Trace}">
+                    <Setter Property="Data" Value="M9,7V9H11V17H13V9H15V7H9M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3Z"/>
+                    <Setter Property="Fill" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Debug}">
+                    <Setter Property="Data" Value="M9,7V17H13A2,2 0 0,0 15,15V9A2,2 0 0,0 13,7H9M11,9H13V15H11V9M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3Z"/>
+                    <Setter Property="Fill" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Info}">
+                    <Setter Property="Data" Value="M14,7H10V9H11V15H10V17H14V15H13V9H14V7M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3Z"/>
+                    <Setter Property="Fill" Value="#E7B248"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Warn}">
+                    <Setter Property="Data" Value="M9,17H15A2,2 0 0,0 17,15V7H15V15H13V8H11V15H9V7H7V15A2,2 0 0,0 9,17M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3Z"/>
+                    <Setter Property="Fill" Value="#FD8A22"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Error}">
+                    <Setter Property="Data" Value="M9,7V17H15V15H11V13H15V11H11V9H15V7H9M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3Z"/>
+                    <Setter Property="Fill" Value="#E32639"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Line.Level}" Value="{x:Static local:Repo+LevelType.Fatal}">
+                    <Setter Property="Data" Value="M9,7V17H11V13H14V11H11V9H15V7H9M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3Z"/>
+                    <Setter Property="Fill" Value="#F92472"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <ListBox x:Name="mListBox" Grid.Row="1" SelectionMode="Single" ItemsSource="{Binding Lines, Mode=OneWay}" ItemContainerStyle="{StaticResource ResourceKey=StyleListBoxItem}"
+                 HorizontalContentAlignment="Stretch"
+                 SelectionChanged="mListBox_SelectionChanged"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                 VirtualizingPanel.IsContainerVirtualizable="True"
+                 VirtualizingPanel.IsVirtualizing="True"
+                 VirtualizingPanel.VirtualizationMode="Recycling"
+                 VirtualizingPanel.CacheLengthUnit="Item">
+            <ListBox.ContextMenu>
+                <ContextMenu x:Name="mListBoxContextMenu" Loaded="mListBoxContextMenu_Loaded" />
+            </ListBox.ContextMenu>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="Transparent" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Line.Date}"/>
+                        <Path Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="15" Height="15" Stretch="Uniform" Style="{StaticResource ResourceKey=StylePathItem}"/>
+                        <TextBlock Grid.Column="2" Margin="5,0,0,0" Text="{Binding Line.Tag}" TextTrimming="CharacterEllipsis" Width="150"/>
+                        <TextBlock Grid.Column="3" Margin="5,0,0,0" Text="{Binding Line.Method}" TextTrimming="CharacterEllipsis" Width="200" Visibility="{Binding ElementName=mListBox, Path=DataContext.ShowMethod, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" />
+                        <TextBlock Grid.Column="4" Margin="5,0,0,0" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap">
+                            <Run Text="{Binding Line.Message, Mode=OneTime}"/>
+                            <TextBlock FontWeight="UltraBold" Text="|" Visibility="{Binding Line.ShowMessageParamsSeparator, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" />
+                            <Run Text="{Binding Line.XParams, Mode=OneTime}"/>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>
